@@ -1,0 +1,9 @@
+index:
+    path: /
+    controller: App\Controller\MainController::index
+get_data:
+    path: /getData
+    controller: App\Controller\MainController::getData
+top_friends:
+    path: /topFriends
+    controller: App\Controller\MainController::getTopFriends

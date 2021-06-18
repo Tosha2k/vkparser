@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Граф пересечений</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet">
+
+</head>
+
+
+<style>
+
+    .link {
+        stroke: #ccc;
+    }
+
+    .node text {
+        pointer-events: none;
+        font: 10px sans-serif;
+    }
+
+</style>
+<body>
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script>
+
+        var width = 960,
+            height = 650
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var force = d3.layout.force()
+            .gravity(0.05)
+            .distance(100)
+            .charge(-100)
+            .size([width, height]);
+
+        d3.json("/getData", function(error, json) {
+            if (error) throw error;
+
+            force
+                .nodes(json.nodes)
+                .links(json.links)
+                .start();
+
+            var link = svg.selectAll(".link")
+                .data(json.links)
+                .enter().append("line")
+                .attr("class", "link");
+
+            var node = svg.selectAll(".node")
+                .data(json.nodes)
+                .enter().append("g")
+                .attr("class", "node")
+                .call(force.drag);
+
+            node.append("image")
+                .attr("xlink:href", function(d) { return d.photo })
+                .attr("x", -12)
+                .attr("y", -12)
+                .attr("width", 24)
+                .attr("height", 24);
+
+            node.append("text")
+                .attr("dx", 12)
+                .attr("dy", ".45em")
+                .text(function(d) { return d.name });
+
+            force.on("tick", function() {
+                link.attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; });
+
+                node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            });
+        });
+
+    </script>
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Граф пересечений</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Пример графа</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/topFriends">Таблица пользователей</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Marketing Icons Section -->
+{#        <div class="row">#}
+{#            <div class="col-lg-12 mb-4">#}
+{#                <div class="card h-100">#}
+{#                    <h4 class="card-header"></h4>#}
+{#                    <div class="card-body graf">#}
+
+{#                    </div>#}
+{#                    <div class="card-footer">#}
+
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+
+{#        </div>#}
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy;</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
